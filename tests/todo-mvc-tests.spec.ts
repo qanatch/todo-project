@@ -42,3 +42,20 @@ test('button All,Active Completed,Clear are visible', async ({page}) => {
     await expect.soft(todoPage.filterCompleted).toBeVisible()
     await expect.soft(todoPage.buttonClearCompletedTasks).toBeVisible()
 });
+
+test('Toggle all tasks', async ({page}) => {
+    await todoPage.inputField.fill('Task 1');
+    await todoPage.inputField.press('Enter');
+    await todoPage.inputField.fill('Task 2');
+    await todoPage.inputField.press('Enter');
+
+
+    expect(await todoPage.counterToDoItems()).toBe(2);
+    await todoPage.buttonSelectAll.click();
+
+    for (const taskName of ['Task 1', 'Task 2']) {
+        await todoPage.checkCompleteTaskByName(taskName);
+    }
+    await todoPage.buttonClearCompletedTasks.click();
+    expect(await todoPage.counterToDoItems()).toBe(0);
+});
